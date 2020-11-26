@@ -8,8 +8,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ### Clone the repo
 
 ```shell
-git clone https://github.com/pavskrish/Krify-task
-cd Krify-task
+git clone https://github.com/pavskrish/krifytask
+cd krifytask
 ```
 
 ### Install npm packages
