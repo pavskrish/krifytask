@@ -1,0 +1,138 @@
+<!-- This form is for Create and Edit Meeting-->
+<!-- Header bar Starts -->
+<div class="logo text-left">
+  <div class="btn_pad"><button type="button" class="btn btn-light" [routerLink]="['/home']"> <i
+        class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Back</button>
+  </div>
+</div>
+
+<div style="margin-top:50px"></div>
+<div class="row">
+  <div class="col-md-4 offset-md-4">
+    <div class="login-wrap">
+
+      <h2 class="text-center" *ngIf="createMeet">Create Meeting</h2>
+      <h2 class="text-center" *ngIf="!createMeet">Edit Meeting</h2>
+
+      <!-- Meeting Form Starts Here -->
+      <form [formGroup]="meetingForm">
+
+        <!-- Firstname fields-->
+        <div class="form-group">
+          <label>First Name <span class="req">*</span></label>
+          <input type="text" formControlName="firstname" class="form-control" placeholder="Firstname"
+            [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+          <!-- validation -->
+          <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+            <div *ngIf="f.firstname.errors.required">User Name is required</div>
+          </div>
+
+        </div>
+
+        <!-- Last name field-->
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" formControlName="lastname" class="form-control" placeholder="Last Name">
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" formControlName="email" class="form-control" placeholder="Email"
+            [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+          <!-- Validations -->
+          <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+            <div *ngIf="f.email.errors.required">Email is required</div>
+            <div *ngIf="f.email.errors.pattern">Please Enter a valid Email</div>
+          </div>
+        </div>
+
+        <!-- Country code  & Phone number fields -->
+        <div class="form-row">
+          <!-- Country code Field -->
+          <div class="form-group col-6">
+            <label>Country code <span class="req">*</span></label>
+            <select formControlName="countrycode" [(ngModel)]="selected" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.countrycode.errors }" (change)='onOptionsSelected($event)'>
+              <option *ngFor="let code of countrycodes" [value]="code.dial_code"> {{code.name}} ({{code.dial_code}})
+              </option>
+            </select>
+            <!-- Validatoins -->
+            <div *ngIf="submitted && f.countrycode.errors" class="invalid-feedback">
+              <div *ngIf="f.countrycode.errors.required">Country Code is required</div>
+            </div>
+          </div>
+          <!-- Phone number Field -->
+          <div class="form-group col-6">
+            <label>Phone Number <span class="req">*</span></label>
+            <input type="text" formControlName="phone" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f.phone.errors }" />
+            <!-- Validations -->
+            <div *ngIf="submitted && f.phone.errors" class="invalid-feedback">
+              <div *ngIf="f.phone.errors.required">Phone Number is required</div>
+              <div *ngIf="f.phone.errors.pattern">Please Enter a valid Phone number</div>
+              <div *ngIf="f.phone.errors.maxlength && !f.phone.errors.pattern ">Phone Number should be in between 8 to
+                10 letters</div>
+              <div *ngIf="f.phone.errors.minlength && !f.phone.errors.pattern">Phone Number should be in between 8 to 10
+                letters</div>
+            </div>
+            <!-- Validation ends -->
+          </div>
+        </div>
+        <!-- Address Field -->
+        <div class="form-group">
+          <label>Address <span class="req">*</span></label>
+          <input type="text" formControlName="address" class="form-control" placeholder="Address"
+            [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+          <!-- Validations -->
+          <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+            <div *ngIf="f.address.errors.required">Address is required</div>
+          </div>
+        </div>
+
+        <!-- Meeting time Field -->
+
+        <div class="form-group">
+          <label>Meeting Time <span class="req">*</span></label>
+          <div class="input-group">
+            <input type="text" id="date-input" class="form-control" aria-label="Date" required dlDateTimeInput
+              [dlDateTimeInputFilter]="dateInputFilter" formControlName="meetingtime" [(ngModel)]="enteredDate"
+              (ngModelOptions)="{standalone:true}">
+              <!-- button to toggle picker -->
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary dropdown-toggle date-dropdown" type="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="oi oi-calendar"></i>
+              </button>
+              <!-- DI date picker directive -->
+              <div class="dropdown-menu" (click)="keepDropDownOpen($event)">
+                <div style="width:360px;">
+                  <dl-date-time-picker formControlName="meetingtime" [(ngModel)]="enteredDate"
+                    (ngModelOptions)="{standalone:true}" (change)="dateSelected($event)"
+                    [selectFilter]="datePickerFilter"></dl-date-time-picker>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="submitted && f.meetingtime.errors" class="invalid-feedback">
+            <div *ngIf="f.meetingtime.errors.required">Meeting time is required</div>
+          </div>
+        </div>
+
+
+        <!--Error message displaying-->
+        <div class="alert alert-danger alert-dismissible text-center" *ngIf="errorMsg">
+          <button type="button" class="close" data-dismiss="alert" (click)="errorMsg=false">&times;</button>
+          {{errorMsgText}}
+        </div>
+
+        <div class="req" style="margin-bottom:3px"><b>Note:</b> All * mark fields are required</div>
+
+        <button type="button" (click)="saveMeeting()" class="btn btn-primary" *ngIf="createMeet">Save</button>
+        <button type="button" (click)="updateMeeting()" class="btn btn-primary" *ngIf="!createMeet">Update</button>
+
+      </form>
+      <!-- Meeting Form ends here -->
+    </div>
+  </div>
+</div>
